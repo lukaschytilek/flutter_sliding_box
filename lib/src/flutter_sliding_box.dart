@@ -32,6 +32,7 @@ class SlidingBox extends StatefulWidget {
     this.animationCurve = Curves.fastOutSlowIn,
     this.animationDuration = const Duration(milliseconds: 100),
     this.backdrop,
+    this.backdropHeight,
     this.onBoxSlide,
     this.onBoxClose,
     this.onBoxOpen,
@@ -123,6 +124,8 @@ class SlidingBox extends StatefulWidget {
   /// the [Backdrop] object.
   final Backdrop? backdrop;
 
+  final double? backdropHeight;
+  
   /// This callback is called when the sliding box slides around with position
   /// of the box. the position is a double value between 0.0 and 1.0,
   /// where 0.0 is fully collapsed and 1.0 is fully opened.
@@ -160,6 +163,7 @@ class _SlidingBoxState extends State<SlidingBox> with TickerProviderStateMixin {
   late ScrollController _scrollController;
   late double _boxWidth;
   late double _backdropWidth;
+  double? _backdropHeight;
   late Widget _searchBody;
   bool _isBoxVisible = true;
   bool _isBoxOpen = true;
@@ -240,6 +244,8 @@ class _SlidingBoxState extends State<SlidingBox> with TickerProviderStateMixin {
     _searchBody = (widget.backdrop?.appBar?.searchBox?.body != null)
         ? widget.backdrop!.appBar!.searchBox!.body!
         : const SizedBox.shrink();
+    
+    _backdropHeight = widget.backdropHeight;
   }
 
   @override
@@ -289,7 +295,7 @@ class _SlidingBoxState extends State<SlidingBox> with TickerProviderStateMixin {
             alignment: Alignment.topCenter,
             child: SizedBox(
               width: _backdropWidth,
-              height: MediaQuery.of(context).size.height,
+              height: _backdropHeight ?? MediaQuery.of(context).size.height,
               child: Container(
                 decoration: BoxDecoration(
                   color: widget.backdrop?.backgroundGradient == null
